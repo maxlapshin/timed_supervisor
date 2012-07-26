@@ -368,7 +368,7 @@ handle_call(_Req, _From, State) ->
 now_to_datetime(undefined) ->
     undefined;
 now_to_datetime(Now) ->
-    calendar:now_to_datetime(Now).
+    calendar:now_to_universal_time(Now).
 
 %% @private
 handle_cast(_, State) ->
@@ -508,7 +508,7 @@ wakeup_interval(Secs,  MSecs) -> Secs*1000 - MSecs.
 %%          Status = started | already_running | scheduled
 start_child(#state{pid=Pid} = State, Type) ->
     Now         = now(),
-    {Date,Time} = calendar:now_to_local_time(Now),
+    {Date,Time} = calendar:now_to_universal_time(Now),
     MSecs       = msecs(Now),
     When        = case Type of
                   reschedule -> get_following_time(State#state.schedule, {Date,Time});
@@ -929,7 +929,7 @@ get_interval(NowTime, ToTime, Add) when NowTime =< ToTime ->
 msecs(_Now = {_, _, MkSecs}) ->
     MkSecs div 1000.
 now_to_time(Now) ->
-    element(2, calendar:now_to_local_time(Now)).
+    element(2, calendar:now_to_universal_time(Now)).
 
 %% @private
 test_mfa(Name, Delay, ExitReason) ->
